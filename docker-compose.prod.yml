@@ -1,0 +1,168 @@
+version: '3.8'
+
+services:
+  # NATS Message Broker
+  nats-server:
+    image: nats:latest
+    container_name: nats-server
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # MongoDB for Auth Microservice
+  mongodb:
+    image: mongo:7.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWORD}
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # PostgreSQL for other microservices
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: cominow
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Auth Microservice
+  auth-microservice:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/auth-microservice:latest
+    container_name: auth-microservice
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${AUTH_DATABASE_URL}
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - nats-server
+      - mongodb
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Product Microservice
+  product-microservice:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/product-microservice:latest
+    container_name: product-microservice
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${PRODUCT_DATABASE_URL}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    depends_on:
+      - nats-server
+      - postgres
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Order Microservice
+  order-microservice:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/order-microservice:latest
+    container_name: order-microservice
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${ORDER_DATABASE_URL}
+    depends_on:
+      - nats-server
+      - postgres
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Payment Microservice
+  payment-microservice:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/payment-microservice:latest
+    container_name: payment-microservice
+    ports:
+      - "3004:3004"
+    environment:
+      - PORT=3004
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${PAYMENT_DATABASE_URL}
+      - MERCADO_PAGO_ACCESS_TOKEN=${MERCADO_PAGO_ACCESS_TOKEN}
+      - MERCADO_PAGO_WEBHOOK_SECRET=${MERCADO_PAGO_WEBHOOK_SECRET}
+    depends_on:
+      - nats-server
+      - postgres
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Customization Microservice
+  customization-microservice:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/customization-microservice:latest
+    container_name: customization-microservice
+    ports:
+      - "3005:3005"
+    environment:
+      - PORT=3005
+      - NATS_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=${CUSTOMIZATION_DATABASE_URL}
+      - CLOUDINARY_CLOUD_NAME=${CLOUDINARY_CLOUD_NAME}
+      - CLOUDINARY_API_KEY=${CLOUDINARY_API_KEY}
+      - CLOUDINARY_API_SECRET=${CLOUDINARY_API_SECRET}
+    depends_on:
+      - nats-server
+      - postgres
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+  # Client Gateway
+  client-gateway:
+    image: ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/cominow/client-gateway:latest
+    container_name: client-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NATS_SERVERS=nats://nats-server:4222
+    depends_on:
+      - nats-server
+      - auth-microservice
+      - product-microservice
+      - order-microservice
+      - payment-microservice
+      - customization-microservice
+    networks:
+      - cominow-network
+    restart: unless-stopped
+
+networks:
+  cominow-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+    driver: local
+  postgres_data:
+    driver: local

@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nats-server
+  namespace: cominow
+  labels:
+    app: nats-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nats-server
+  template:
+    metadata:
+      labels:
+        app: nats-server
+    spec:
+      containers:
+        - name: nats
+          image: nats:latest
+          ports:
+            - containerPort: 4222
+              name: client
+            - containerPort: 8222
+              name: monitoring
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nats-server
+  namespace: cominow
+  labels:
+    app: nats-server
+spec:
+  type: ClusterIP
+  ports:
+    - port: 4222
+      targetPort: 4222
+      protocol: TCP
+      name: client
+    - port: 8222
+      targetPort: 8222
+      protocol: TCP
+      name: monitoring
+  selector:
+    app: nats-server

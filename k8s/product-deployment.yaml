@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-microservice
+  namespace: cominow
+  labels:
+    app: product-microservice
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: product=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/product-microservice
+    argocd-image-updater.argoproj.io/product.update-strategy: latest
+    argocd-image-updater.argoproj.io/product.pull-secret: pullsecret:argocd/ecr-credentials
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: product-microservice
+  template:
+    metadata:
+      labels:
+        app: product-microservice
+    spec:
+      containers:
+        - name: product-microservice
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/product-microservice:latest
+          ports:
+            - containerPort: 3002
+          env:
+            - name: PORT
+              value: "3002"
+            - name: NATS_SERVICE_NAME
+              value: "NATS_SERVICE"
+            - name: NATS_SERVERS
+              value: "nats://nats-server:4222"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: cominow-secrets
+                  key: PRODUCTS_DATABASE_URL
+            - name: CLOUDINARY_CLOUD_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: cominow-secrets
+                  key: CLOUDINARY_CLOUD_NAME
+            - name: CLOUDINARY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: cominow-secrets
+                  key: CLOUDINARY_API_KEY
+            - name: CLOUDINARY_API_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: cominow-secrets
+                  key: CLOUDINARY_API_SECRET
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-microservice
+  namespace: cominow
+  labels:
+    app: product-microservice
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3002
+      targetPort: 3002
+      protocol: TCP
+  selector:
+    app: product-microservice
