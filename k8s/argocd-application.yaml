@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/YOUR-ORG/infra.git
+    repoURL: https://github.com/ComiNow/infra.git
     targetRevision: main
     path: k8s
 
