@@ -17,7 +17,7 @@ metadata:
     argocd-image-updater.argoproj.io/order.update-strategy: latest
     argocd-image-updater.argoproj.io/payment.update-strategy: latest
     argocd-image-updater.argoproj.io/customization.update-strategy: latest
-    argocd-image-updater.argoproj.io/write-back-method: git
+    argocd-image-updater.argoproj.io/write-back-method: argocd
 spec:
   project: default
 
