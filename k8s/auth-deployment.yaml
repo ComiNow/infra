@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: auth-microservice
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/auth-microservice:latest
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/auth-microservice:4b673f838b07a1b2de371340fbf56dcfac8d79e2
           ports:
             - containerPort: 3001
           env:
