@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: client-gateway
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/client-gateway:latest
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/client-gateway:801c006006bab73301f3597890ac1f45a862743a
           ports:
             - containerPort: 3000
           env:
