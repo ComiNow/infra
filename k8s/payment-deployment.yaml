@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: payment-microservice
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/payment-microservice:latest
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/payment-microservice:de52b4171a28727368d4815398d53031185b41fb
           ports:
             - containerPort: 3004
           env:
