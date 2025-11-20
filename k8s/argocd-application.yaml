@@ -3,6 +3,21 @@ kind: Application
 metadata:
   name: cominow
   namespace: argocd
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: |
+      auth=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/auth-microservice,
+      client-gateway=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/client-gateway,
+      product=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/product-microservice,
+      order=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/order-microservice,
+      payment=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/payment-microservice,
+      customization=515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/customization-microservice
+    argocd-image-updater.argoproj.io/auth.update-strategy: latest
+    argocd-image-updater.argoproj.io/client-gateway.update-strategy: latest
+    argocd-image-updater.argoproj.io/product.update-strategy: latest
+    argocd-image-updater.argoproj.io/order.update-strategy: latest
+    argocd-image-updater.argoproj.io/payment.update-strategy: latest
+    argocd-image-updater.argoproj.io/customization.update-strategy: latest
+    argocd-image-updater.argoproj.io/write-back-method: git
 spec:
   project: default
 
