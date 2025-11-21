@@ -4,8 +4,10 @@ Infraestructura para desplegar ComiNow en AWS EKS con GitOps usando ArgoCD.
 
 ## URLs de Producción
 
-- **Client Gateway**: http://k8s-cominow-clientga-487d3ec347-410239c1ef728475.elb.us-east-2.amazonaws.com
-- **Client Gateway(cloudfront)**: https://d1rubx5h2u6ukl.cloudfront.net/
+- **API Gateway (CloudFront)**: https://d1rubx5h2u6ukl.cloudfront.net
+- **Payment Webhook (CloudFront)**: https://d1fnxwfvihz944.cloudfront.net
+- **Client Gateway (LoadBalancer)**: http://k8s-cominow-clientga-487d3ec347-410239c1ef728475.elb.us-east-2.amazonaws.com
+- **Payment Webhook (LoadBalancer)**: http://k8s-cominow-paymentm-a14a871b54-df85504235616a59.elb.us-east-2.amazonaws.com
 - **ArgoCD UI**: https://a998dbdf32e4843f397535fad6fdecb4-1662659382.us-east-2.elb.amazonaws.com
   - Usuario: `admin`
   - Password: `zFquhoaw67OczPya`
