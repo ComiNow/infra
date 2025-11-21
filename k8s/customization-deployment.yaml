@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: customization-microservice
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/customization-microservice:latest
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/customization-microservice:7ec9ecbf94c94ead994b471a1975de6083acdd72
           ports:
             - containerPort: 3005
           env:
