@@ -36,16 +36,6 @@ spec:
                 secretKeyRef:
                   name: cominow-secrets
                   key: PAYMENTS_DATABASE_URL
-            - name: MERCADO_PAGO_ACCESS_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: cominow-secrets
-                  key: MERCADO_PAGO_ACCESS_TOKEN
-            - name: MERCADO_PAGO_WEBHOOK_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: cominow-secrets
-                  key: MERCADO_PAGO_WEBHOOK_SECRET
             - name: APP_SERVICE_CLIENT_BASE_URL
               value: "https://d3gwsdg49ynx4o.cloudfront.net"
             - name: ENCRYPTION_KEY
