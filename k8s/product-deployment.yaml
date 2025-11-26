@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: product-microservice
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/product-microservice:301780974d778b255ed5f7517a0ffc17e5cd295d
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/product-microservice:4416e98c18ce3422555fcea45624d0134aef633a
           ports:
             - containerPort: 3002
           env:
