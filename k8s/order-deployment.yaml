@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
         - name: order-microservice
-          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/order-microservice:61c878dcbdacd80807254819bce545b080c223d8
+          image: 515966498907.dkr.ecr.us-east-2.amazonaws.com/cominow/order-microservice:2bdae236b03a106582abc4b92323e70f03bf971d
           ports:
             - containerPort: 3003
           env:
