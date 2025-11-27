@@ -19,6 +19,8 @@ spec:
         - name: nats
           image: nats:latest
           args:
+            - "-m"
+            - "8222"
             - "--max_payload"
             - "10485760"
           ports:
