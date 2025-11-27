@@ -18,16 +18,18 @@ spec:
       containers:
         - name: nats
           image: nats:latest
+          command: ["/nats-server"]
           args:
-            - "-m"
-            - "8222"
-            - "--max_payload"
-            - "10485760"
+            - "--config"
+            - "/etc/nats/nats-server.conf"
           ports:
             - containerPort: 4222
               name: client
             - containerPort: 8222
               name: monitoring
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/nats
           resources:
             requests:
               memory: "64Mi"
@@ -35,6 +37,10 @@ spec:
             limits:
               memory: "128Mi"
               cpu: "100m"
+      volumes:
+        - name: config-volume
+          configMap:
+            name: nats-config
 ---
 apiVersion: v1
 kind: Service
