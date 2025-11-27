@@ -18,6 +18,9 @@ spec:
       containers:
         - name: nats
           image: nats:latest
+          args:
+            - "--max_payload"
+            - "10485760"
           ports:
             - containerPort: 4222
               name: client
